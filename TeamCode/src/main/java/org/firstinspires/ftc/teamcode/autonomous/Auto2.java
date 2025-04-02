@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-@Autonomous(name="Auto")
+//@Autonomous(name="Auto")
 public class Auto2 extends LinearOpMode{
     DcMotor motorLB,motorLF,motorRB,motorRF;
     int limit = 1225;

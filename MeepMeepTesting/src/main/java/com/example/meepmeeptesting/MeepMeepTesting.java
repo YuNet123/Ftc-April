@@ -24,66 +24,84 @@ public class MeepMeepTesting {
 //                        .build());
 
 
-        //        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-39,-63  , Math.toRadians(90)))
-//                .strafeToLinearHeading(new Vector2d(-55,-55), Math.PI/2)
-//                .turn(-Math.PI/4)
-//                .waitSeconds(1)
-//                .splineTo(new Vector2d(-47,-40), Math.PI/2)
-//                .waitSeconds(1)
-//                .strafeToLinearHeading(new Vector2d(-55,-55), Math.PI/4)
-//                .waitSeconds(1)
-//                .strafeToLinearHeading(new Vector2d(-58,-40), Math.PI/2)
-//                .waitSeconds(1)
-//                .strafeToLinearHeading(new Vector2d(-55,-55), Math.PI/4)
-//                .waitSeconds(1)
-//                .strafeToLinearHeading(new Vector2d(-60,-40), Math.PI/2)
-//                .turn(Math.PI/5)
-//                .waitSeconds(1)
-//                .strafeToLinearHeading(new Vector2d(-55,-55),Math.PI/4)
-//                .build());
+                myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-39,-63  , Math.PI/2))
+                        .strafeToLinearHeading(new Vector2d(-55,-55), Math.PI/2)
+                        .turn(-Math.PI/4)
+                        .strafeToLinearHeading(new Vector2d(-46,-35), Math.PI/2)
+                        .setTangent(Math.PI/2)
+                        .lineToY(-33.5)
+                        .strafeToLinearHeading(new Vector2d(-55,-55), Math.PI/4)
+                        .strafeToLinearHeading(new Vector2d(-56,-35), Math.PI/2)
+                        .setTangent(Math.PI/2)
+                        .lineToY(-32.5)
+                        .strafeToLinearHeading(new Vector2d(-55,-55), Math.PI/4) // from here
+                        .strafeToLinearHeading(new Vector2d(-34,-11), Math.PI)
+                        .setTangent(Math.PI)
+                        .lineToX(-20)
+                .build());
 
 
 
-        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(0, -63, 3*Math.PI/2))
-                        .lineToY(-30)
+//        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(0, -63, 3*Math.PI/2))
+//                        .lineToY(-30)
 //                .strafeTo(new Vector2d(0,-30))
-                // put sample
+//                 put sample
 //                                .strafeTo(new Vector2d(0,-35))
 //                                .turn(Math.toRadians(60))
 //                                .strafeTo(new Vector2d(47, -60))
 //                                .turn(Math.toRadians(-60))
 //                                .strafeTo(new Vector2d(-5,-30))
 //                                .strafeTo(new Vector2d(-5,-35))
-                // turn
-                .build());
+//                 turn
+//                .build());
 //
-//        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(0, -63, Math.toRadians(-90)))
+//        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(0, -63, 3*Math.PI/2))
 //                  .lineToY(-30)
-//                  .lineToY(-35)
+//                  .lineToY(-40)
 //                  .splineTo(new Vector2d(35,-30), Math.PI/2)
 //                  .lineToY(-12)
 //                  .setTangent(0)
-//                  .splineToConstantHeading(new Vector2d(48, -10), Math.PI / 2)
+//                  .splineToConstantHeading(new Vector2d(48, -12), Math.PI / 2)
 //                  .lineToYConstantHeading(-50)
 //                  .lineToYConstantHeading(-13)
 //                  .setTangent(0)
 //                  .lineToX(57)
 //                  .turn(Math.toRadians(0.01))
 //                  .lineToY(-50)
-//                  .splineTo(new Vector2d(36,-55), Math.PI/2)
-//                  .lineToY(-63)
-//                  .strafeTo(new Vector2d(0,-32))
-//                  .waitSeconds(0.5)
-//                  .strafeTo(new Vector2d(36,-63))
-//                  .waitSeconds(1)
-//                  .strafeTo(new Vector2d(0,-32))
-//                  .waitSeconds(0.5)
-//                  .strafeTo(new Vector2d(36,-63))
-//                  .waitSeconds(1)
-//                  .strafeTo(new Vector2d(0,-32))
-//                  .waitSeconds(0.5)
-//                  .strafeTo(new Vector2d(36,-63))
-//                  .build());
+//                .lineToYConstantHeading(-13)
+//                .strafeTo(new Vector2d(62, -13))
+//                .setTangent(3*Math.PI/2)
+//                .lineToY(-50)
+//
+//        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(4, -63, 3*Math.PI/2))
+//                .lineToY(-30)
+//                .lineToY(-40)
+//                .splineTo(new Vector2d(39,-13), Math.PI/2)
+//                .lineToY(-12)
+//                .setTangent(3*Math.PI/2)
+//                .strafeTo(new Vector2d(46, -12))
+//                .setTangent(Math.PI/2)
+//                .lineToYConstantHeading(-55)
+//                 here
+//                .lineToYConstantHeading(-42)
+//                .turn(Math.PI)
+//
+//
+//
+//                .lineToYConstantHeading(-58)
+//                .strafeTo(new Vector2d(-5,-40))
+//                .setTangent(Math.PI/2)
+//                .lineToYConstantHeading(-32)
+//                .lineToYConstantHeading(-44)
+//                .strafeTo(new Vector2d(48,-40))
+//                .setTangent(Math.PI/2)
+//                .lineToYConstantHeading(-58)
+//                .strafeTo(new Vector2d(0,-40))
+//                .setTangent(Math.PI/2)
+//                .lineToYConstantHeading(-32)
+//                .lineToYConstantHeading(-44)
+//                .strafeTo(new Vector2d(48,-60))
+//                .build());
 
 
         myBot.setDimensions(16,16);

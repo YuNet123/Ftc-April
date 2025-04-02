@@ -21,7 +21,7 @@
 
     import org.firstinspires.ftc.teamcode.MecanumDrive;
 
-    @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Autonomous")
+//    @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Autonomous")
     public class Autonomous extends OpMode {
         MecanumDrive drive;
 

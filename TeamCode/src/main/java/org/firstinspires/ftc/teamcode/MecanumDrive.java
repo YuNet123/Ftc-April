@@ -52,7 +52,7 @@
     import java.util.List;
 
     @Config
-    public final class MecanumDrive {
+    public  class MecanumDrive {
         public static class Params {
             // IMU orientation
             // TODO: fill in these values based on
@@ -73,12 +73,12 @@
             public double kA = 0.0001; // 0.0001
 
             // path profile parameters (in inches)
-            public double maxWheelVel = 50;
-            public double minProfileAccel = -30;
-            public double maxProfileAccel = 50;
+            public static double maxWheelVel = 80;
+            public static double minProfileAccel = -30;
+            public static double maxProfileAccel = 50;
 
             // turn profile parameters (in radians)
-            public double maxAngVel = Math.PI; // shared with path
+            public double maxAngVel = 3*Math.PI/2; // shared with path
             public double maxAngAccel = Math.PI;
 
             // path controller gains
@@ -249,7 +249,7 @@
 
             localizer = new ThreeDeadWheelLocalizer(hardwareMap, PARAMS.inPerTick, pose);
 
-            FlightRecorder.write("MECANUM_PARAMS", PARAMS);
+//            FlightRecorder.write("MECANUM_PARAMS", PARAMS);
         }
 
         public void setDrivePowers(PoseVelocity2d powers) {

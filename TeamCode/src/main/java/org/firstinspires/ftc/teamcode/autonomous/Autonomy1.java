@@ -1,7 +1,12 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.SleepAction;
+import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
+import com.acmerobotics.roadrunner.TrajectoryBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -13,7 +18,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 
-@Autonomous(name = "Autonomy1", group = "Autonomous")
+//@Autonomous(name = "Autonomy1", group = "Autonomous")
 public class Autonomy1 extends LinearOpMode {
     public CRServo pull1, pull2;
     private Servo lift1, lift2, arm1, arm2, claw, ext1, ext2, outputArm1, outputArm2;
@@ -62,25 +67,61 @@ public class Autonomy1 extends LinearOpMode {
 
         claw.setPosition(0.4);
 
-        outputArm1.setPosition(0.5); // 0.15
-        outputArm2.setPosition(0.5); // 0.85
+        outputArm1.setPosition(0.358); // 0.15
+        outputArm2.setPosition(0.637); // 0.85
 
 
+        TrajectoryActionBuilder tr1 = drive.actionBuilder(beginPose)
+                        .lineToY(-30);
+
+        TrajectoryActionBuilder tr2 = tr1.endTrajectory().fresh()
+                .strafeTo(new Vector2d(0,-40));
+
+        TrajectoryActionBuilder tr3 = tr2.endTrajectory().fresh()
+                .turn(Math.toRadians(60))
+                .strafeTo(new Vector2d(47, -55))
+                .turn(Math.toRadians(-60))
+                .strafeTo(new Vector2d(0,-30))
+                .strafeTo(new Vector2d(0,-40));
 
         waitForStart();
         if (isStopRequested()) return;
 
         Actions.runBlocking(
-                drive.actionBuilder(beginPose)
-                        .strafeTo(new Vector2d(0,-30))
-//                        .stopAndAdd()
-                        .strafeTo(new Vector2d(0,-35))
-                        .turn(Math.toRadians(60))
-                        .strafeTo(new Vector2d(47, -55))
-                        .turn(Math.toRadians(-60))
-                        .strafeTo(new Vector2d(0,-30))
-                        .strafeTo(new Vector2d(0,-35))
-                        .build()
+
+                new SequentialAction(
+                        tr1.build(),
+                        new InstantAction(() ->{
+                            claw.setPosition(0.6);
+                        }),
+                        new SleepAction(1),
+                        new InstantAction(() ->{
+                            lift1.setPosition(1);
+                            lift2.setPosition(0);
+                            outputArm1.setPosition(0.7); // 0.85
+                            outputArm2.setPosition(0.3);
+                        }),
+                        new SleepAction(1),
+                        tr2.build(),
+                        new SleepAction(1),
+                        new InstantAction(() ->{
+                            claw.setPosition(0.4);
+                            outputArm1.setPosition(0.358); // 0.15
+                            outputArm2.setPosition(0.637); // 0.85
+                        }),
+                        tr3.build()
+                )
+//                drive.actionBuilder(beginPose)
+//                        .strafeTo(new Vector2d(0,-30))
+////                        .stopAndAdd()
+//                        .strafeTo(new Vector2d(0,-35))
+//                        .turn(Math.toRadians(60))
+//                        .strafeTo(new Vector2d(47, -55))
+//                        .turn(Math.toRadians(-60))
+//                        .strafeTo(new Vector2d(0,-30))
+//                        .strafeTo(new Vector2d(0,-35))
+//                        .build()
         );
     }
+
 }

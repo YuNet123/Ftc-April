@@ -20,13 +20,9 @@ public class Main extends OpMode {
     private Servo lift1, lift2, arm1, arm2, claw, ext1, ext2, outputArm1, outputArm2;
     private MecanumDrive drive;
     private Motor fl, fr, bl, br, sl, sr;
-    private ToggleButtonReader extToggle, pullInToggle, pullOutToggle, clawToggle;
+    private ToggleButtonReader extToggle, pullInToggle, pullOutToggle, clawToggle, slowModeToggle;
+    private double driveCoeficent = 1;
 
-    // Toggle flags
-    private boolean extToggled = false;
-    private boolean pullToggled = false;
-    private boolean clawToggled = false;
-    private boolean outputArmToggled = false;
 
     @Override
     public void init() {
@@ -83,102 +79,57 @@ public class Main extends OpMode {
         // port 4
         claw = hardwareMap.get(Servo.class, "claw");
 
-        // port 5,0
-        arm1 = hardwareMap.get(Servo.class, "arm1");
-        arm2 = hardwareMap.get(Servo.class, "arm2");
-        arm1.setDirection(Servo.Direction.REVERSE);
-
         // port 1,3
         outputArm1 = hardwareMap.get(Servo.class, "output arm 1");
         outputArm2 = hardwareMap.get(Servo.class, "output arm 2");
-
-        pullToggled = false;
 
         ext1.setPosition(0.35); // 0.47
         ext2.setPosition(0.35); // 0.53
 
         pull1.setPower(0);
         pull2.setPower(0);
-        arm1.setPosition(0.2);
-        arm2.setPosition(0.2);
+
         claw.setPosition(0.4);
 
-        outputArm1.setPosition(0.5); // 0.15
-        outputArm2.setPosition(0.5); // 0.85
+//        outputArm1.setPosition(0.5); // middle
+//        outputArm2.setPosition(0.5); // 0.85
+
+        outputArm1.setPosition(0.358); // down
+        outputArm2.setPosition(0.637);
 
         pullInToggle = new ToggleButtonReader(gamepadMechanism, GamepadKeys.Button.B);
         pullOutToggle = new ToggleButtonReader(gamepadMechanism, GamepadKeys.Button.X);
         clawToggle = new ToggleButtonReader(gamepadMechanism, GamepadKeys.Button.LEFT_BUMPER);
         extToggle = new ToggleButtonReader(gamepadMechanism, GamepadKeys.Button.A);
+
+        slowModeToggle = new ToggleButtonReader(gamepadDriver, GamepadKeys.Button.A);
     }
 
     @Override
     public void loop() {
-        double leftX = Math.abs(gamepadDriver.getLeftX()) > 0.1 ? gamepadDriver.getLeftX() : 0;
-        double leftY = Math.abs(gamepadDriver.getLeftY()) > 0.1 ? gamepadDriver.getLeftY() : 0;
-        double rightX = Math.abs(gamepadDriver.getRightX()) > 0.1 ? gamepadDriver.getRightX() : 0;
-        // Default drive values from joysticks
-        double driveX = leftX;
-        double driveY = leftY;
-        double driveRotation = rightX;
+//        double leftX = Math.abs(gamepadDriver.getLeftX()) > 0.1 ? gamepadDriver.getLeftX() : 0;
+//        double leftY = Math.abs(gamepadDriver.getLeftY()) > 0.1 ? gamepadDriver.getLeftY() : 0;
+//        double rightX = Math.abs(gamepadDriver.getRightX()) > 0.1 ? gamepadDriver.getRightX() : 0;
+//        // Default drive values from joysticks
+//        double driveX = leftX;
+//        double driveY = leftY;
+//        double driveRotation = rightX;
 
-// Check for digital overrides; if any are pressed, override joystick values
-        if (gamepadDriver.gamepad.dpad_down) {
-            driveX = 0;
-            driveY = 1;
-            driveRotation = 0;
-        } else if (gamepadDriver.gamepad.dpad_up) {
-            driveX = 0;
-            driveY = -1;
-            driveRotation = 0;
-        } else if (gamepadDriver.gamepad.dpad_right) {
-            driveX = -1;
-            driveY = 0;
-            driveRotation = 0;
-        } else if (gamepadDriver.gamepad.dpad_left) {
-            driveX = 1;
-            driveY = 0;
-            driveRotation = 0;
-        } else if (gamepadDriver.gamepad.a) {
-            driveX = 0;
-            driveY = 0.6;
-            driveRotation = 0;
-        } else if (gamepadDriver.gamepad.y) {
-            driveX = 0;
-            driveY = -0.6;
-            driveRotation = 0;
-        } else if (gamepadDriver.gamepad.b) {
-            driveX = -0.6;
-            driveY = 0;
-            driveRotation = 0;
-        } else if (gamepadDriver.gamepad.x) {
-            driveX = 0.6;
-            driveY = 0;
-            driveRotation = 0;
-        } else if (gamepadDriver.gamepad.right_trigger > 0.1 || gamepadDriver.gamepad.left_bumper) {
-            driveX = 0.2;
-            driveY = 0;
-            driveRotation = 1;
-        } else if (gamepadDriver.gamepad.left_trigger > 0.1 || gamepadDriver.gamepad.right_bumper) {
-            driveX = 0.2;
-            driveY = 0;
-            driveRotation = -1;
+        slowModeToggle.readValue();
+        if (slowModeToggle.wasJustPressed()){
+            if (driveCoeficent == 1) driveCoeficent = 0.3;
+            else driveCoeficent = 1;
         }
 
-// Call the drive method once per loop iteration
-        drive.driveRobotCentric(driveX, driveY, driveRotation);
+        drive.driveRobotCentric(gamepadDriver.getLeftX() * driveCoeficent,
+                gamepadDriver.getLeftY()  * driveCoeficent,
+                gamepadDriver.getRightX()  * driveCoeficent);
 
         // Elevator controls (up/down)
         sl.set(gamepadMechanism.getRightY() * 0.8);
         sr.set(gamepadMechanism.getRightY() * 0.8);
 
 
-
-//            outputArm1.setPosition(outputArm1.getPosition() + gamepadMechanism.getLeftY()*0.001);
-//            outputArm2.setPosition(outputArm2.getPosition() - gamepadMechanism.getLeftY()*0.001);
-
-//            telemetry.addData("Arm1 ", outputArm1.getPosition());
-//            telemetry.addData("Arm2 ", outputArm2.getPosition());
 
         // Intake toggle (B button)
         pullInToggle.readValue(); // update the toggle state
