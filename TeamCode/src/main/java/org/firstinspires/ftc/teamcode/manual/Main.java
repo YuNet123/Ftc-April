@@ -15,14 +15,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "Main")
 public class Main extends OpMode {
-    private GamepadEx gamepadDriver, gamepadMechanism;
-    public CRServo pull1, pull2;
-    private Servo lift1, lift2, arm1, arm2, claw, ext1, ext2, outputArm1, outputArm2;
-    private MecanumDrive drive;
-    private Motor fl, fr, bl, br, sl, sr;
-    private ToggleButtonReader extToggle, pullInToggle, pullOutToggle, clawToggle, slowModeToggle;
-    private double driveCoeficent = 1;
-
+    private GamepadEx gamepadDriver, gamepadMechanism; // Definirea gammepad-urilor
+    public CRServo pull1, pull2; // Tragerea înăuntru a specimenilor
+    private Servo lift1, lift2, claw; // Controlează mișcarea platformei, cleștelui, a extensiilor
+    private Servo ext1, ext2, outputArm1, outputArm2; // Controlează mișcarea extensiei și a brațului
+    private MecanumDrive drive; //  Controlează mișcarea robotului
+    private Motor fl, fr, bl, br, sl, sr; // Motoarele de mișcare a robotului și de ridicare a brațului
+    private ToggleButtonReader extToggle, pullInToggle, pullOutToggle, clawToggle, slowModeToggle; // Butoanele ce lucrează ca toggles
+    private double driveCoeficent = 1; // Folosit pentru schimbarea de viteză a robotului
 
     @Override
     public void init() {
@@ -83,16 +83,13 @@ public class Main extends OpMode {
         outputArm1 = hardwareMap.get(Servo.class, "output arm 1");
         outputArm2 = hardwareMap.get(Servo.class, "output arm 2");
 
-        ext1.setPosition(0.35); // 0.47
-        ext2.setPosition(0.35); // 0.53
+        ext1.setPosition(0.35); // retract the forward extension of the robot
+        ext2.setPosition(0.35);
 
-        pull1.setPower(0);
+        pull1.setPower(0); // make sure the servos that pull in specimens are off
         pull2.setPower(0);
 
-        claw.setPosition(0.4);
-
-//        outputArm1.setPosition(0.5); // middle
-//        outputArm2.setPosition(0.5); // 0.85
+        claw.setPosition(0.4); // open claw
 
         outputArm1.setPosition(0.358); // down
         outputArm2.setPosition(0.637);
@@ -107,14 +104,6 @@ public class Main extends OpMode {
 
     @Override
     public void loop() {
-//        double leftX = Math.abs(gamepadDriver.getLeftX()) > 0.1 ? gamepadDriver.getLeftX() : 0;
-//        double leftY = Math.abs(gamepadDriver.getLeftY()) > 0.1 ? gamepadDriver.getLeftY() : 0;
-//        double rightX = Math.abs(gamepadDriver.getRightX()) > 0.1 ? gamepadDriver.getRightX() : 0;
-//        // Default drive values from joysticks
-//        double driveX = leftX;
-//        double driveY = leftY;
-//        double driveRotation = rightX;
-
         slowModeToggle.readValue();
         if (slowModeToggle.wasJustPressed()){
             if (driveCoeficent == 1) driveCoeficent = 0.3;
@@ -128,8 +117,6 @@ public class Main extends OpMode {
         // Elevator controls (up/down)
         sl.set(gamepadMechanism.getRightY() * 0.8);
         sr.set(gamepadMechanism.getRightY() * 0.8);
-
-
 
         // Intake toggle (B button)
         pullInToggle.readValue(); // update the toggle state
@@ -174,29 +161,15 @@ public class Main extends OpMode {
 
         // Automatic claw grab (Y button)
         if (gamepadMechanism.gamepad.y) {
-//            ext1.setPosition(0.34);
-//            ext2.setPosition(0.34);
-
             lift1.setPosition(0.8);
             lift2.setPosition(0.2);
-
-
             sleep(250);
-//
             claw.setPosition(0.6);
-
             sleep(250);
-
             outputArm1.setPosition(0.7); // 0.85
             outputArm2.setPosition(0.3); // 0.15
-//            sleep(250);
             lift1.setPosition(1);
             lift2.setPosition(0);
-
-//            ext1.setPosition(0.35);
-//            ext2.setPosition(0.35);
-
-
         }
 
         // Claw open/close toggle (Left Bumper)
@@ -236,9 +209,6 @@ public class Main extends OpMode {
             {
                 ext1.setPosition(ext1.getPosition() + gamepadMechanism.getLeftY()*0.007);
                 ext2.setPosition(ext2.getPosition() + gamepadMechanism.getLeftY()*0.007);
-                telemetry.addData("ext1 ", ext1.getPosition());
-                telemetry.addData("ext2 ", ext2.getPosition());
-                telemetry.update();
             }
         }
 

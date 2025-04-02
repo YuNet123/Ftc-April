@@ -24,24 +24,46 @@ public class MeepMeepTesting {
 //                        .build());
 
 
-                myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-39,-63  , Math.PI/2))
-                        .strafeToLinearHeading(new Vector2d(-55,-55), Math.PI/2)
-                        .turn(-Math.PI/4)
-                        .strafeToLinearHeading(new Vector2d(-46,-35), Math.PI/2)
-                        .setTangent(Math.PI/2)
-                        .lineToY(-33.5)
-                        .strafeToLinearHeading(new Vector2d(-55,-55), Math.PI/4)
-                        .strafeToLinearHeading(new Vector2d(-56,-35), Math.PI/2)
-                        .setTangent(Math.PI/2)
-                        .lineToY(-32.5)
-                        .strafeToLinearHeading(new Vector2d(-55,-55), Math.PI/4) // from here
-                        .strafeToLinearHeading(new Vector2d(-34,-11), Math.PI)
-                        .setTangent(Math.PI)
-                        .lineToX(-20)
+                myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-39, -63, 3*Math.PI/2))
+                        .strafeToLinearHeading(new Vector2d(-55,-55), Math.PI/2) // Move to the basket
+                        .turn(-Math.PI/4) // Turn in the correct direction to be able to put the sample in the basket
+                        .strafeToLinearHeading(new Vector2d(-46,-35), Math.PI/2) // Go to first sample
+                        .setTangent(Math.PI/2)  // Make robot face forward
+                        .lineToY(-33.5)  // Grab sample
+                        .strafeToLinearHeading(new Vector2d(-55,-55), Math.PI/4) // Return to the basket
+                        .strafeToLinearHeading(new Vector2d(-56,-35), Math.PI/2) // Go to first sample
+                        .setTangent(Math.PI/2) // Make robot face forward
+                        .lineToY(-32.5) // Grab sample
+                        .strafeToLinearHeading(new Vector2d(-55,-55), Math.PI/4) // Return to the basket
+                        .strafeToLinearHeading(new Vector2d(-34,-11), Math.PI) // Start movement towards parking spot
+                        .setTangent(Math.PI) // Make robot face in the left direction
+                        .lineToX(-20) // Go to the parking spot
                 .build());
-
-
-
+//
+////                        .lineToY(-30)
+////                        .lineToY(-40)
+////                        .splineTo(new Vector2d(44,-13), Math.PI/2)
+////                        .lineToY(-12)
+////                        .setTangent(3*Math.PI/2)
+////                        .strafeTo(new Vector2d(58, -12))
+////                        .setTangent(Math.PI/2)
+////                        .lineToYConstantHeading(-55)
+////                        .lineToYConstantHeading(-42)
+////                        .turn(Math.PI)
+////                        .lineToYConstantHeading(-58)
+////                        .strafeTo(new Vector2d(-5,-40))
+////                        .setTangent(Math.PI/2)
+////                        .lineToYConstantHeading(-32)
+////                        .lineToYConstantHeading(-45)
+////                        .strafeTo(new Vector2d(48,-40))
+////                        .setTangent(Math.PI/2)
+////                        .lineToYConstantHeading(-58)
+////                        .strafeTo(new Vector2d(0,-40))
+////                        .setTangent(Math.PI/2)
+////                        .lineToYConstantHeading(-32)
+////                        .lineToYConstantHeading(-44)
+////                        .strafeTo(new Vector2d(48,-60))
+//
 //        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(0, -63, 3*Math.PI/2))
 //                        .lineToY(-30)
 //                .strafeTo(new Vector2d(0,-30))

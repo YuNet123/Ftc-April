@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 
-@Autonomous(name = "AutoBasket", group = "Autonomous")
+//@Autonomous(name = "AutoBasketPrototype", group = "Autonomous")
 public class AutoBasket extends LinearOpMode {
     public CRServo pull1, pull2;
     private Servo lift1, lift2, claw, ext1, ext2, outputArm1, outputArm2;

@@ -64,7 +64,6 @@ public class AutoSpecimen extends LinearOpMode {
         outputArm1.setPosition(0.358); // 0.15
         outputArm2.setPosition(0.637); // 0.85
 
-
         TrajectoryActionBuilder tr1 = drive.actionBuilder(beginPose)
                 .lineToY(-30);
 
@@ -109,8 +108,6 @@ public class AutoSpecimen extends LinearOpMode {
 
         TrajectoryActionBuilder tr11 = tr10.endTrajectory().fresh()
                 .strafeTo(new Vector2d(48,-60));
-
-        maxWheelVel = 300;
 
         waitForStart();
         if (isStopRequested()) return;

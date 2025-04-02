@@ -17,12 +17,11 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 
-@Autonomous(name = "AutoBasket2", group = "Autonomous")
+@Autonomous(name = "AutoBasket", group = "Autonomous")
 public class AutoBasket2 extends LinearOpMode {
     public CRServo pull1, pull2;
     private Servo lift1, lift2, claw, ext1, ext2, outputArm1, outputArm2;
     private Motor sl, sr;
-
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -46,22 +45,17 @@ public class AutoBasket2 extends LinearOpMode {
         // port 4
         claw = hardwareMap.get(Servo.class, "claw");
 
-        // port 5,0
-//        arm1 = hardwareMap.get(Servo.class, "arm1");
-//        arm2 = hardwareMap.get(Servo.class, "arm2");
-//        arm1.setDirection(Servo.Direction.REVERSE);
-
         // port 1,3
         outputArm1 = hardwareMap.get(Servo.class, "output arm 1");
         outputArm2 = hardwareMap.get(Servo.class, "output arm 2");
 
-        ext1.setPosition(0.35); // 0.47
-        ext2.setPosition(0.35); // 0.53
+        ext1.setPosition(0.35);
+        ext2.setPosition(0.35);
 
         pull1.setPower(0);
         pull2.setPower(0);
 
-        outputArm1.setPosition(0.358); // 0.15
+        outputArm1.setPosition(0.358);
         outputArm2.setPosition(0.637);
 
         lift1.setPosition(0.6);
@@ -72,8 +66,6 @@ public class AutoBasket2 extends LinearOpMode {
         outputArm1.setPosition(0.358); // 0.15
         outputArm2.setPosition(0.637); // 0.85
 
-
-
         // Control hub
         // port 2,3
         sl = new Motor(hardwareMap, "motor1");
@@ -83,24 +75,24 @@ public class AutoBasket2 extends LinearOpMode {
         sr.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         sl.setInverted(true);
 
-        TrajectoryActionBuilder tr1 = drive.actionBuilder(beginPose)
+        TrajectoryActionBuilder tr1 = drive.actionBuilder(beginPose) // auto start
                 .strafeToLinearHeading(new Vector2d(-55,-55), Math.PI/2)
                 .turn(-Math.PI/4);
 
-        TrajectoryActionBuilder tr2 = tr1.endTrajectory().fresh() // to next sample
+        TrajectoryActionBuilder tr2 = tr1.endTrajectory().fresh() // move to next sample
                 .strafeToLinearHeading(new Vector2d(-46,-35), Math.PI/2);
 
-        TrajectoryActionBuilder tr3 = tr2.endTrajectory().fresh() // suck in sample
+        TrajectoryActionBuilder tr3 = tr2.endTrajectory().fresh() // pull in sample
                 .setTangent(Math.PI/2)
                 .lineToY(-33.5);
 
-        TrajectoryActionBuilder tr4 = tr3.endTrajectory().fresh()
-                .strafeToLinearHeading(new Vector2d(-55,-55), Math.PI/4); // back to base
+        TrajectoryActionBuilder tr4 = tr3.endTrajectory().fresh() // back to base
+                .strafeToLinearHeading(new Vector2d(-55,-55), Math.PI/4);
 
-        TrajectoryActionBuilder tr5 = tr4.endTrajectory().fresh() // to next sample
+        TrajectoryActionBuilder tr5 = tr4.endTrajectory().fresh() // to the next sample
                 .strafeToLinearHeading(new Vector2d(-56,-35), Math.PI/2);
 
-        TrajectoryActionBuilder tr6 = tr5.endTrajectory().fresh() // suck in sample
+        TrajectoryActionBuilder tr6 = tr5.endTrajectory().fresh() // pull in sample
                 .setTangent(Math.PI/2)
                 .lineToY(-32.5);
 
@@ -117,19 +109,19 @@ public class AutoBasket2 extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        new InstantAction( () -> {
-                            pull1.setPower(1);
-                            pull2.setPower(1);
+                        new InstantAction( () -> { // start pull in
+                            pull1.setPower(1);     // to push sample
+                            pull2.setPower(1);     // into the claw
                         }),
-                        new SleepAction(0.5),
-                        new InstantAction( () -> {
+                        new SleepAction(0.5),  // wait for claw to catch the sample
+                        new InstantAction( () -> { // grab sample stop pull in
                             claw.setPosition(0.6);
                             pull1.setPower(0);
                             pull2.setPower(0);
                         }),
-                        tr1.build(),
-                        new InstantAction( () -> {
-                            sl.set(0.8);
+                        tr1.build(), // move to the basket
+                        new InstantAction( () -> { // start the elevator
+                            sl.set(0.8);          // lo lift the sample
                             sr.set(0.8);
                         }),
                         new SleepAction(1.2),
