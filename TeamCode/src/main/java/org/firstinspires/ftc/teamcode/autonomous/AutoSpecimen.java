@@ -89,7 +89,7 @@ public class AutoSpecimen extends LinearOpMode {
                 .lineToYConstantHeading(-32);
 
         TrajectoryActionBuilder tr6 = tr5.endTrajectory().fresh()
-                .lineToYConstantHeading(-45);
+                .lineToYConstantHeading(-46);
 
         TrajectoryActionBuilder tr7 = tr6.endTrajectory().fresh()
                 .strafeTo(new Vector2d(48,-40));
@@ -99,7 +99,7 @@ public class AutoSpecimen extends LinearOpMode {
                 .lineToYConstantHeading(-58);
 
         TrajectoryActionBuilder tr9 = tr8.endTrajectory().fresh()
-                .strafeTo(new Vector2d(0,-40))
+                .strafeTo(new Vector2d(-4,-40))
                 .setTangent(Math.PI/2)
                 .lineToYConstantHeading(-32);
 
@@ -114,27 +114,23 @@ public class AutoSpecimen extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        tr1.build(),
+                        tr1.build(), // Mișcarea spre bară
                         new InstantAction(() ->{
-                            maxWheelVel = 150;
-                            claw.setPosition(0.6);
+                            claw.setPosition(0.6); // Închidere de clește
                         }),
-                        new SleepAction(0.5),
-                        new InstantAction(() ->{
-//                            lift1.setPosition(1);
-//                            lift2.setPosition(0);
-                            outputArm1.setPosition(0.7); // 0.85
+                        new SleepAction(0.5), // Pauză înaintea ridicării brațului
+                        new InstantAction(() ->{ // Rudicare brațului și atașarea specimenului
+                            outputArm1.setPosition(0.7);
                             outputArm2.setPosition(0.3);
                         }),
-                        new SleepAction(1),
-                        tr2.build(),
-                        new InstantAction(() ->{
-                            claw.setPosition(0.4);
-                            outputArm1.setPosition(0.358); // 0.15
-                            outputArm2.setPosition(0.637); // 0.85
-                            maxWheelVel = 130;
+                        new SleepAction(0.5), // Pauză pentru a oferi timp pentru mișcare
+                        tr2.build(),      // Mișcarea în față pentru a asigura atașarea specimenului
+                        new InstantAction(() ->{   // Deschiderea cleștelui și revenirea brațului
+                            claw.setPosition(0.4); // Revenirea brațului în poziția de jos
+                            outputArm1.setPosition(0.358);
+                            outputArm2.setPosition(0.637);
                         }),
-                        tr3.build(),
+                        tr3.build(), // Mișcarea spre următorul sample
                         new InstantAction(() ->{
                             lift1.setPosition(1);
                             lift2.setPosition(0);
@@ -199,11 +195,12 @@ public class AutoSpecimen extends LinearOpMode {
                         tr10.build(),
                         new InstantAction(() ->{
                             claw.setPosition(0.4);
-                            outputArm1.setPosition(0.358); // 0.15
-                            outputArm2.setPosition(0.637); // 0.85
+//                            outputArm1.setPosition(0.358); // 0.15
+//                            outputArm2.setPosition(0.637); // 0.85
                             maxWheelVel = 200;
                         }),
-                        tr11.build()
+                        tr11.build(),
+                        new SleepAction(2)
                 )
         );
     }

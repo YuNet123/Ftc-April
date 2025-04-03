@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name = "Main")
 public class Main extends OpMode {
@@ -23,6 +24,16 @@ public class Main extends OpMode {
     private Motor fl, fr, bl, br, sl, sr; // Motoarele de mișcare a robotului și de ridicare a brațului
     private ToggleButtonReader extToggle, pullInToggle, pullOutToggle, clawToggle, slowModeToggle; // Butoanele ce lucrează ca toggles
     private double driveCoeficent = 1; // Folosit pentru schimbarea de viteză a robotului
+    private ElapsedTime actionTimer = new ElapsedTime(); // Definerea timer-ului
+    private enum ClawState { // Definirea stărilor cleștelui
+        IDLE,
+        INIT_LIFT,
+        GRAB,
+        WAIT_AFTER_GRAB,
+        EXTEND_ARM,
+        COMPLETE
+    }
+    private ClawState clawState = ClawState.IDLE;
 
     @Override
     public void init() {
@@ -83,13 +94,13 @@ public class Main extends OpMode {
         outputArm1 = hardwareMap.get(Servo.class, "output arm 1");
         outputArm2 = hardwareMap.get(Servo.class, "output arm 2");
 
-        ext1.setPosition(0.35); // retract the forward extension of the robot
+        ext1.setPosition(0.35); // Retragerea extensiei în spatae
         ext2.setPosition(0.35);
 
-        pull1.setPower(0); // make sure the servos that pull in specimens are off
-        pull2.setPower(0);
+        pull1.setPower(0); // Confirmăm că puterea la servo-uri
+        pull2.setPower(0); // continue este 0
 
-        claw.setPosition(0.4); // open claw
+        claw.setPosition(0.4); // Deschiderea cleștelui
 
         outputArm1.setPosition(0.358); // down
         outputArm2.setPosition(0.637);
@@ -159,17 +170,54 @@ public class Main extends OpMode {
             lift2.setPosition(0.4);
         }
 
-        // Automatic claw grab (Y button)
-        if (gamepadMechanism.gamepad.y) {
+        if (gamepadMechanism.gamepad.y && clawState == ClawState.IDLE) {
+            clawState = ClawState.INIT_LIFT;
+            actionTimer.reset();
             lift1.setPosition(0.8);
             lift2.setPosition(0.2);
-            sleep(250);
-            claw.setPosition(0.6);
-            sleep(250);
-            outputArm1.setPosition(0.7); // 0.85
-            outputArm2.setPosition(0.3); // 0.15
-            lift1.setPosition(1);
-            lift2.setPosition(0);
+        }
+
+        switch (clawState) { // Timere în funcție de
+            case INIT_LIFT:  // poziția la clește
+                if (actionTimer.milliseconds() > 250) { // Așteptare de 250ms
+                    clawState = ClawState.GRAB; // Setarea noii stări a cleștelui
+                    actionTimer.reset(); // Resetarea timerului
+                }
+                break;
+
+            case GRAB:
+                claw.setPosition(0.6);
+                clawState = ClawState.WAIT_AFTER_GRAB;
+                actionTimer.reset();
+                break;
+
+            case WAIT_AFTER_GRAB:
+                // Wait another 250ms after the claw grabs
+                if (actionTimer.milliseconds() > 250) {
+                    clawState = ClawState.EXTEND_ARM;
+                    actionTimer.reset();
+                }
+                break;
+
+            case EXTEND_ARM:
+                // Extend the output arm as part of the sequence
+                outputArm1.setPosition(0.7); // extended position
+                outputArm2.setPosition(0.3);
+                // Reset the lift to its final position
+                lift1.setPosition(1);
+                lift2.setPosition(0);
+                clawState = ClawState.COMPLETE;
+                break;
+
+            case COMPLETE:
+                // Sequence complete; reset state for next use
+                clawState = ClawState.IDLE;
+                break;
+
+            case IDLE:
+            default:
+                // Do nothing in the idle state
+                break;
         }
 
         // Claw open/close toggle (Left Bumper)
@@ -189,6 +237,14 @@ public class Main extends OpMode {
             outputArm2.setPosition(0.637); // 0.85
         }
 
+        if (gamepadMechanism.gamepad.dpad_right) {
+            pull1.setPower(0);
+            pull2.setPower(0);
+            lift1.setPosition(0.6);
+            lift2.setPosition(0.4);
+            ext1.setPosition(0.35); // Retragerea extensiei în spatae
+            ext2.setPosition(0.35);
+        }
 
         // Output arm position toggle (D-Pad Up/Down)
         if (gamepadMechanism.gamepad.dpad_up) {
@@ -224,4 +280,5 @@ public class Main extends OpMode {
         }
 
     }
+
 }

@@ -75,21 +75,21 @@ public class AutoBasket2 extends LinearOpMode {
         sr.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         sl.setInverted(true);
 
-        TrajectoryActionBuilder tr1 = drive.actionBuilder(beginPose) // auto start
+        TrajectoryActionBuilder tr1 = drive.actionBuilder(beginPose) // Mișcarea spre coș
                 .strafeToLinearHeading(new Vector2d(-55,-55), Math.PI/2)
                 .turn(-Math.PI/4);
 
-        TrajectoryActionBuilder tr2 = tr1.endTrajectory().fresh() // move to next sample
+        TrajectoryActionBuilder tr2 = tr1.endTrajectory().fresh() // Mișcare spre primul sample
                 .strafeToLinearHeading(new Vector2d(-46,-35), Math.PI/2);
 
-        TrajectoryActionBuilder tr3 = tr2.endTrajectory().fresh() // pull in sample
+        TrajectoryActionBuilder tr3 = tr2.endTrajectory().fresh() // Mișcarea înainte pentru a lua sample-ul
                 .setTangent(Math.PI/2)
                 .lineToY(-33.5);
 
-        TrajectoryActionBuilder tr4 = tr3.endTrajectory().fresh() // back to base
+        TrajectoryActionBuilder tr4 = tr3.endTrajectory().fresh() // Mișcarea spre coș
                 .strafeToLinearHeading(new Vector2d(-55,-55), Math.PI/4);
 
-        TrajectoryActionBuilder tr5 = tr4.endTrajectory().fresh() // to the next sample
+        TrajectoryActionBuilder tr5 = tr4.endTrajectory().fresh() // Mișcare spre al doilea sample
                 .strafeToLinearHeading(new Vector2d(-56,-35), Math.PI/2);
 
         TrajectoryActionBuilder tr6 = tr5.endTrajectory().fresh() // pull in sample
@@ -109,19 +109,19 @@ public class AutoBasket2 extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        new InstantAction( () -> { // start pull in
-                            pull1.setPower(1);     // to push sample
-                            pull2.setPower(1);     // into the claw
+                        new InstantAction( () -> { // Împingerea în clește a
+                            pull1.setPower(1);     // sample-ului cu ajutorul
+                            pull2.setPower(1);     // servo-urilor continue
                         }),
-                        new SleepAction(0.5),  // wait for claw to catch the sample
-                        new InstantAction( () -> { // grab sample stop pull in
+                        new SleepAction(0.5),  // Pauză pentru a împinge sample-ul
+                        new InstantAction( () -> { // Apucarea cu cleștele a sample-ului
                             claw.setPosition(0.6);
                             pull1.setPower(0);
                             pull2.setPower(0);
                         }),
-                        tr1.build(), // move to the basket
-                        new InstantAction( () -> { // start the elevator
-                            sl.set(0.8);          // lo lift the sample
+                        tr1.build(), // Mișcarea la coș
+                        new InstantAction( () -> { // Ridicarea sample-ului
+                            sl.set(0.8);           // cu motoarele
                             sr.set(0.8);
                         }),
                         new SleepAction(1.2),
@@ -257,7 +257,13 @@ public class AutoBasket2 extends LinearOpMode {
                             lift2.setPosition(0);
                         }),
                         new SleepAction(1.5),
-                        tr8.build()
+                        tr8.build(),
+                        new SleepAction(0.5),
+                        new InstantAction(() ->{
+                            outputArm1.setPosition(0.66);
+                            outputArm2.setPosition(0.32);
+                        }),
+                        new SleepAction(0.5)
                 )
         );
     }
