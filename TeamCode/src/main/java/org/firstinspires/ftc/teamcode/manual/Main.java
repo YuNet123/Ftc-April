@@ -179,7 +179,7 @@ public class Main extends OpMode {
 
         switch (clawState) { // Timere în funcție de
             case INIT_LIFT:  // poziția la clește
-                if (actionTimer.milliseconds() > 250) { // Așteptare de 250ms
+                if (actionTimer.milliseconds() > 350) { // Așteptare de 250ms
                     clawState = ClawState.GRAB; // Setarea noii stări a cleștelui
                     actionTimer.reset(); // Resetarea timerului
                 }
@@ -193,7 +193,7 @@ public class Main extends OpMode {
 
             case WAIT_AFTER_GRAB:
                 // Wait another 250ms after the claw grabs
-                if (actionTimer.milliseconds() > 250) {
+                if (actionTimer.milliseconds() > 350) {
                     clawState = ClawState.EXTEND_ARM;
                     actionTimer.reset();
                 }

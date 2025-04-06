@@ -68,13 +68,13 @@ public class AutoSpecimen extends LinearOpMode {
                 .lineToY(-30);
 
         TrajectoryActionBuilder tr2 = tr1.endTrajectory().fresh()
-                .lineToY(-40);
+                .lineToY(-40.5);
 
         TrajectoryActionBuilder tr3 = tr2.endTrajectory().fresh()
-                .splineTo(new Vector2d(41,-13), Math.PI/2)
+                .splineTo(new Vector2d(42,-13), Math.PI/2)
                 .lineToY(-12)
                 .setTangent(3*Math.PI/2)
-                .strafeTo(new Vector2d(48, -12))
+                .strafeTo(new Vector2d(48.5, -12))
                 .setTangent(Math.PI/2)
                 .lineToYConstantHeading(-55)
                 .lineToYConstantHeading(-42)
@@ -89,7 +89,7 @@ public class AutoSpecimen extends LinearOpMode {
                 .lineToYConstantHeading(-32);
 
         TrajectoryActionBuilder tr6 = tr5.endTrajectory().fresh()
-                .lineToYConstantHeading(-46);
+                .lineToYConstantHeading(-47);
 
         TrajectoryActionBuilder tr7 = tr6.endTrajectory().fresh()
                 .strafeTo(new Vector2d(48,-40));
@@ -104,7 +104,7 @@ public class AutoSpecimen extends LinearOpMode {
                 .lineToYConstantHeading(-32);
 
         TrajectoryActionBuilder tr10 = tr9.endTrajectory().fresh()
-                .lineToYConstantHeading(-44);
+                .lineToYConstantHeading(-49);
 
         TrajectoryActionBuilder tr11 = tr10.endTrajectory().fresh()
                 .strafeTo(new Vector2d(48,-60));
@@ -134,7 +134,7 @@ public class AutoSpecimen extends LinearOpMode {
                         new InstantAction(() ->{
                             lift1.setPosition(1);
                             lift2.setPosition(0);
-                            maxWheelVel = 20;
+//                            maxWheelVel = 20;
                             pull1.setPower(1);
                             pull2.setPower(1);
                         }),
@@ -143,12 +143,14 @@ public class AutoSpecimen extends LinearOpMode {
                             maxWheelVel = 200;
                             lift1.setPosition(0.8);
                             lift2.setPosition(0.2);
+                            pull1.setPower(1); // q
+                            pull2.setPower(1); // q
                         }),
                         tr5.build(),
                         new InstantAction(() -> {
                             claw.setPosition(0.6);
-                            pull1.setPower(0);
-                            pull2.setPower(0);
+                            pull1.setPower(1); // q
+                            pull2.setPower(1); // q
                         }),
                         new SleepAction(0.4),
                         new InstantAction(() ->{
@@ -157,7 +159,7 @@ public class AutoSpecimen extends LinearOpMode {
                             outputArm1.setPosition(0.7); // 0.85
                             outputArm2.setPosition(0.3);
                         }),
-                        new SleepAction(0.6),
+                        new SleepAction(0.5),
                         tr6.build(),
                         new InstantAction(() ->{
                             claw.setPosition(0.4);
@@ -168,7 +170,6 @@ public class AutoSpecimen extends LinearOpMode {
                         new InstantAction(() ->{
                             lift1.setPosition(1);
                             lift2.setPosition(0);
-//                            maxWheelVel = 20;
                             pull1.setPower(1);
                             pull2.setPower(1);
                         }),

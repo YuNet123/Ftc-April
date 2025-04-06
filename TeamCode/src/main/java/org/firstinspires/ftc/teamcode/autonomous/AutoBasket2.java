@@ -25,7 +25,7 @@ public class AutoBasket2 extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        Pose2d beginPose = new Pose2d(-39, -63, Math.PI/2);
+        Pose2d beginPose = new Pose2d(-39, -62, Math.PI/2);
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
         pull1 = hardwareMap.get(CRServo.class, "pull1");
@@ -90,11 +90,11 @@ public class AutoBasket2 extends LinearOpMode {
                 .strafeToLinearHeading(new Vector2d(-55,-55), Math.PI/4);
 
         TrajectoryActionBuilder tr5 = tr4.endTrajectory().fresh() // Mișcare spre al doilea sample
-                .strafeToLinearHeading(new Vector2d(-56,-35), Math.PI/2);
+                .strafeToLinearHeading(new Vector2d(-57.5,-36), Math.PI/2);
 
         TrajectoryActionBuilder tr6 = tr5.endTrajectory().fresh() // pull in sample
                 .setTangent(Math.PI/2)
-                .lineToY(-32.5);
+                .lineToY(-31.5);
 
         TrajectoryActionBuilder tr7 = tr6.endTrajectory().fresh()
                 .strafeToLinearHeading(new Vector2d(-55,-55), Math.PI/4); // back to base
